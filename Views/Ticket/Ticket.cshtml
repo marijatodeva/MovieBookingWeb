@@ -1,0 +1,274 @@
+﻿@model MovieWeb.Models.TicketPageViewModel
+
+@{
+    var movie = Model.Movie;
+    var showings = Model.Showings;
+    var selectedDate = Model.SelectedDate;
+    ViewData["Title"] = "Book Ticket - " + movie?.Name;
+}
+
+<div class="booking-container">
+    <div class="movie-card">
+        <div class="movie-header">
+            <h2>@movie?.Name</h2>
+            <span class="price">$@movie?.Price</span>
+        </div>
+        <img class="movie-poster" src="@movie?.ImageUrl" alt="@movie?.Name" />
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-action="AddToCart" asp-controller="Cart" method="post" class="booking-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="movieId" value="@movie.Id" />
+
+                <label>Select Date:</label>
+                <input type="date" name="SelectedDate"
+                       value="@(selectedDate.HasValue? selectedDate.Value.ToString("yyyy-MM-dd") : "")"
+                       min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       onchange="reloadPage()" />
+
+                <label>Select Time:</label>
+                <select name="SelectedShowingId" class="time-select" required onchange="reloadPage()">
+                    <option value="">-- Select Time --</option>
+                    @foreach (var showing in showings)
+                    {
+                        var timeStr = DateTime.Parse(showing.ShowingTime).ToString("HH:mm");
+                            <option value="@showing.Id" selected="@(showing.Id == Model.SelectedShowingId ? "selected" : null)">
+                                @timeStr
+                            </option>
+
+                    }
+                </select>
+                @if (Model.SelectedShowingId.HasValue)
+                {
+                    <div class="hall-label">
+                        Hall @Model.HallId
+                    </div>
+                }
+                
+            
+                <label>Choose your seats:</label>
+                <div class="seats-grid">
+                    @foreach (var seat in Model.Seats)
+                    {
+                        if (seat.IsBooked)
+                        {
+                            <div class="seat booked">@seat.SeatNumber</div>
+                        }
+                        else
+                        {
+                            <label class="seat free">
+                                @seat.SeatNumber
+                                <input type="checkbox" name="Seats" value="@seat.SeatNumber" />
+                            </label>
+                        }
+                    }
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Add to Cart 🛒</button>
+            </form>
+        }
+        else
+        {
+            <a href="/AppUser/Login" class="btn btn-secondary mt-2 back-btn">Login to book Tickets</a>
+        }
+
+        <a href="/Movie/Index" class="btn btn-secondary mt-2 back-btn">Back to Movies</a>
+    </div>
+</div>
+<script>
+    function reloadPage() {
+        const form = document.querySelector('.booking-form');
+        const movieId = form.querySelector('input[name="movieId"]').value;
+        const date = form.querySelector('input[name="SelectedDate"]').value;
+        const showingId = form.querySelector('select[name="SelectedShowingId"]').value;
+
+        let url = `/Ticket/Ticket?movieId=${movieId}`;
+        if(date) url += `&SelectedDate=${date}`;
+        if(showingId) url += `&SelectedShowingId=${showingId}`;
+
+        window.location.href = url; 
+    }
+</script>
+<style>
+.booking-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #f9f9f9;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hall-label {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.movie-card {
+    position: relative;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.movie-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.movie-header h2 { font-size: 24px; margin: 0; }
+
+.price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #007bff;
+}
+
+.movie-poster { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+
+.booking-form label { display: block; margin-bottom: 5px; font-weight: 500; }
+
+.time-select, .booking-form input { width: 100%; padding: 8px 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px; font-size: 16px; }
+
+.seats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.seat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    border-radius: 5px;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    transition: all 0.2s ease;
+}
+
+.seat.free { background-color: #28a745; color: #fff; cursor: pointer; }
+.seat.free:hover { background-color: #218838; }
+.seat input { margin-left: 5px; }
+.seat.booked { background-color: #dc3545; color: #fff; cursor: not-allowed; }
+
+.btn { display: inline-block; padding: 10px 20px; border-radius: 5px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease; }
+.btn-primary { background: #007bff; color: #fff; }
+.btn-primary:hover { background: #0056b3; }
+.btn-secondary { background: #6c757d; color: #fff; }
+.btn-secondary:hover { background: #5a6268; }
+.back-btn { display: inline-block; margin-top: 15px; }
+
+.no-showings {
+    color: #ff4d4d;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+}
+</style>
+
+
+<style>
+.booking-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #f9f9f9;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hall-label {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.movie-card {
+    position: relative;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.movie-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.movie-header h2 { font-size: 24px; margin: 0; }
+
+.price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #007bff;
+}
+
+.movie-poster { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+
+.booking-form label { display: block; margin-bottom: 5px; font-weight: 500; }
+
+.time-select, .booking-form input { width: 100%; padding: 8px 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px; font-size: 16px; }
+
+.seats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.seat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    border-radius: 5px;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    transition: all 0.2s ease;
+}
+
+.seat.free { background-color: #28a745; color: #fff; cursor: pointer; }
+.seat.free:hover { background-color: #218838; }
+.seat input { margin-left: 5px; }
+.seat.booked { background-color: #dc3545; color: #fff; cursor: not-allowed; }
+
+.btn { display: inline-block; padding: 10px 20px; border-radius: 5px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease; }
+.btn-primary { background: #007bff; color: #fff; }
+.btn-primary:hover { background: #0056b3; }
+.btn-secondary { background: #6c757d; color: #fff; }
+.btn-secondary:hover { background: #5a6268; }
+.back-btn { display: inline-block; margin-top: 15px; }
+
+.no-showings {
+    color: #ff4d4d;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+}
+</style>

@@ -1,0 +1,23 @@
+﻿@model MovieWeb.Models.Movie
+
+<div class="card" style="max-width: 600px; margin: 20px auto;">
+    <img class="card-img-top" src="@Model.ImageUrl" alt="@Model.Name" />
+    <div class="card-body">
+        <h2 style="margin-bottom: 30px;">@Model.Name</h2>
+
+        <p><strong>Description:</strong></p>
+        <p>@Model.Description</p>
+
+        <p><strong>Genre:</strong> @Model.Genre</p>
+
+        <p><strong>Directed by:</strong> @Model.Director</p>
+        <p><strong>Stars:</strong> @Model.Stars</p>
+
+        @if (!string.IsNullOrEmpty(Model.TrailerUrl))
+        {
+            <p><strong>Trailer:</strong> <a href="@Model.TrailerUrl" target="_blank">Watch trailer on YouTube</a></p>
+        }
+
+        <a href="/Movie/Index" class="btn btn-secondary mt-3">Back to list</a>
+    </div>
+</div>

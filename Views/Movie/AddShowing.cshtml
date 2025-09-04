@@ -1,0 +1,57 @@
+﻿@model MovieWeb.Models.Movie
+
+<form asp-action="AddShowing" method="post" class="showing-form">
+    <h2 class="form-title">Add Showing for @Model.Name</h2>
+
+    <input type="hidden" name="MovieId" value="@Model.Id" />
+
+    <label>Select Date:</label>
+    <input type="date" name="ShowingDate" class="form-control mb-2" required />
+
+    <label>Select Time:</label>
+    <input type="time" name="ShowingTime" class="form-control mb-2" required />
+
+    <label>Hall ID:</label>
+    <input type="number" name="HallId" class="form-control mb-2" min="1" required />
+
+    <button type="submit" class="btn btn-primary mt-2">Add Showing</button>
+</form>
+
+<style>
+    .showing-form {
+        background: linear-gradient(135deg, #d0e4f7, #a0c4f7); 
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 800px; 
+        width: 90%; 
+        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        margin: 50px auto; 
+    }
+
+        .showing-form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            margin-top: 12px;
+        }
+
+    .form-title {
+        font-weight: bold;
+        text-align: center;
+        font-size: 28px; 
+        margin-bottom: 20px;
+    }
+
+    .showing-form input,
+    .showing-form button {
+        margin-bottom: 12px;
+    }
+
+    .showing-form .btn-primary {
+        width: 100%;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 12px 0;
+    }
+</style> 
+  

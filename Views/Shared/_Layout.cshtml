@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MovieXcape</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+        }
+
+        .btn-login, .btn-logout {
+            margin-left: auto; 
+        }
+
+        main {
+            flex: 1; 
+        }
+
+        .footer {
+            background-color: rgba(0,0,0,0.3);
+            padding: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MovieXcape</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Movie" asp-action="Index">Movies</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                             <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Ticket" asp-action="MyTickets">Tickets</a>
+                        </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Ticket" asp-action="Index">All Tickets</a>
+                                </li>
+
+                            }
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
+                        </li>
+                    </ul>
+
+                    <a href="/Cart/Cart" style="font-size: 2rem; color: gold; text-decoration: none; margin-left: 30px;">
+                        🛒
+                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        var fullName = User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value;
+                        var firstName = !string.IsNullOrEmpty(fullName) ? fullName.Split(' ')[0] : User.Identity.Name;
+                        <span class="nav-link text-white ms-3">Hello, @firstName!</span>
+                        <form class="d-inline ms-2" method="post" asp-controller="AppUser" asp-action="Logout">
+                            <button type="submit" class="btn btn-danger btn-logout">Logout</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn btn-warning text-dark fw-bold btn-login ms-3" href="/AppUser/Login">🔑 Login</a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="nav-link" href="@Url.Action("AdminUsers", "AppUser")">All Users</a>
+                    }
+
+
+
+
+                    <form class="d-flex ms-3" method="get" action="/Movie/Search">
+                        <input class="form-control me-2" type="search" placeholder="Search movies..." aria-label="Search" name="query" />
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container-fluid p-0">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top footer text-muted text-center">
+        <div class="container">
+            &copy; 2025 - MovieXcape - <a asp-area="" asp-controller="Home" asp-action="AboutUs">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+
+<div id="chatbot-container">
+    <div id="chatbot-header">
+        <span>Chat</span>
+        <button id="close-chatbot">X</button>
+    </div>
+    <div id="chatbot-body">
+        <div id="chatbot-messages"></div>
+        <div style="display:flex;">
+            <input type="text" id="chatbot-input" placeholder="Type a message..." />
+            <button id="send-message">Send</button>
+        </div>
+    </div>
+</div>
+
+<button id="open-chatbot">💬</button>
+
+<style>
+    #chatbot-container {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 320px;
+        max-height: 450px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        z-index: 1050;
+        transition: all 0.3s ease;
+    }
+
+    #chatbot-header {
+        background: #007bff;
+        color: white;
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    #chatbot-body {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        flex: 1;
+    }
+
+    #chatbot-messages {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        border: 1px solid #eee;
+        padding: 8px;
+        border-radius: 6px;
+        background: #f8f8f8;
+    }
+
+    #chatbot-input {
+        width: calc(100% - 70px);
+        padding: 6px 8px;
+        margin-right: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    #send-message {
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: none;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+
+    #open-chatbot {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #007bff;
+        color: white;
+        font-size: 28px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        z-index: 1100;
+        transition: all 0.2s ease;
+    }
+
+        #open-chatbot:hover {
+            background: #0056b3;
+        }
+</style>
+
+<script>
+    const chatbot = document.getElementById("chatbot-container");
+    const openBtn = document.getElementById("open-chatbot");
+    const closeBtn = document.getElementById("close-chatbot");
+    const sendBtn = document.getElementById("send-message");
+    const input = document.getElementById("chatbot-input");
+    const messages = document.getElementById("chatbot-messages");
+
+    openBtn.addEventListener("click", () => {
+        chatbot.style.display = "flex";
+        openBtn.style.display = "none";
+    });
+
+    closeBtn.addEventListener("click", () => {
+        chatbot.style.display = "none";
+        openBtn.style.display = "block";
+    });
+
+       sendBtn.addEventListener("click", async () => {
+        const text = input.value.trim();
+        if(text){
+            const msg = document.createElement("div");
+            msg.textContent = "You: " + text;
+            msg.style.margin = "4px 0";
+            msg.style.color = "black";
+            messages.appendChild(msg);
+
+            try {
+    const response = await fetch(`/Question/Answer?questionText=${encodeURIComponent(text)}`);
+                    const answer = await response.text();
+
+                const botMsg = document.createElement("div");
+                botMsg.textContent = "Bot: " + answer;
+                botMsg.style.color = "blue";
+                botMsg.style.margin = "4px 0";
+                messages.appendChild(botMsg);
+
+                messages.scrollTop = messages.scrollHeight;
+                input.value = "";
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    });
+
+    input.addEventListener("keypress", (e) => {
+        if(e.key === "Enter") sendBtn.click();
+    });
+</script>
+
+</html>

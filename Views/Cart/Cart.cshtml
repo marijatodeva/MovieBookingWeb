@@ -1,0 +1,72 @@
+﻿@model List<MovieWeb.Models.CartItem>
+
+<h2 class="mb-4">🛒 Your Cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-dark table-hover align-middle text-center">
+        <thead>
+            <tr>
+                <th>Movie</th>
+                <th>Date</th>
+                <th>Seats</th>
+                <th>Quantity</th>
+                <th>Price per Ticket</th>
+                <th>Payment Method</th> 
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MovieName</td>
+                    <td>@item.SelectedDate.ToString("dd/MM/yyyy")</td>
+                    <td>@string.Join(", ", item.Seats)</td>
+                    <td>
+                        <form asp-action="UpdateQuantity" method="post" class="d-flex justify-content-center align-items-center">
+                            <input type="hidden" name="movieId" value="@item.MovieId" />
+                            <input type="hidden" name="selectedDate" value="@item.SelectedDate" />
+                            <input type="hidden" name="selectedTime" value="@item.SelectedTime" />
+                            <input type="hidden" name="seats" value="@string.Join(",", item.Seats)" />
+
+                            <button type="submit" name="action" value="decrease" class="btn btn-sm btn-outline-light">-</button>
+                            <span class="mx-2">@item.Seats.Count</span>
+                            <button type="submit" name="action" value="increase" class="btn btn-sm btn-outline-light">+</button>
+                        </form>
+                    </td>
+                    <td>@item.PricePerTicket.ToString("C")</td>
+
+                    <td>@item.PaymentMethod</td>
+
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post">
+                            <input type="hidden" name="movieId" value="@item.MovieId" />
+                            <input type="hidden" name="selectedDate" value="@item.SelectedDate" />
+                            <input type="hidden" name="selectedTime" value="@item.SelectedTime" />
+                            <input type="hidden" name="seats" value="@string.Join(",", item.Seats)" />
+                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3 class="text-end mt-3">
+        Total: @(Model.Sum(i => i.PricePerTicket * i.Seats.Count).ToString("C"))
+    </h3>
+
+    <form asp-action="CreditCardForm" asp-controller="Cart" method="get">
+        <input type="hidden" name="paymentMethod" value="CreditCard" />
+        <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+    </form>
+
+
+
+
+}

@@ -1,0 +1,25 @@
+﻿@model MovieWeb.Models.MovieIndexViewModel
+
+<h2>Remove Showing for @Model.Movie.Name</h2>
+
+@if (Model.Showings.Any())
+{
+    <ul>
+        @foreach (var showing in Model.Showings)
+        {
+            <li>
+                @showing.ShowingDate.ToString("yyyy-MM-dd") @showing.ShowingTime
+                <form method="post" asp-action="ConfirmRemoveShowing" asp-controller="Movie">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="showingId" value="@showing.Id" />
+                    <input type="hidden" name="movieId" value="@Model.Movie.Id" />
+                    <button type="submit" class="btn btn-danger">🗑️ Remove</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No showings available.</p>
+}

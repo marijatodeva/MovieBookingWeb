@@ -1,0 +1,14 @@
+﻿@model IEnumerable<MovieWeb.Models.Question>
+
+<h2>Frequently Asked Questions</h2>
+
+<div>
+    @foreach (var q in Model)
+    {
+        <div class="faq-item mb-3">
+            <strong>@q.QuestionText</strong>
+            <p>@q.AnswerText</p>
+            <small>Category: @q.Category | Created: @q.CreatedAt.ToShortDateString()</small>
+        </div>
+    }
+</div>

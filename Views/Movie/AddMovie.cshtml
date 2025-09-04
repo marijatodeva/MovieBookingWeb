@@ -1,0 +1,120 @@
+﻿@model MovieWeb.Models.Movie
+
+
+<div class="form-wrapper">
+    <form asp-action="AddMovie" method="post" class="add-movie-form">
+        <h2 class="form-title">Add New Movie</h2>
+        <div class="form-group">
+            <label>Name</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>Genre</label>
+            <input asp-for="Genre" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Duration (minutes)</label>
+            <input asp-for="Duration" type="number" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Release Date</label>
+            <input asp-for="ReleaseDate" type="date" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Amount</label>
+            <input asp-for="Amount" type="number" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Image URL</label>
+            <input asp-for="ImageUrl" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Price</label>
+            <input asp-for="Price" type="number" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Director</label>
+            <input asp-for="Director" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Stars</label>
+            <input asp-for="Stars" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Trailer URL</label>
+            <input asp-for="TrailerUrl" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Rating</label>
+            <input asp-for="Rating" type="number" step="0.1" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Add Movie</button>
+    </form>
+</div>
+
+<style>
+    body {
+        background: #f5f0ff; 
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .form-wrapper {
+        display: flex;
+        justify-content: center; 
+        padding-bottom: 40px;
+    }
+
+    .add-movie-form {
+        width: 500px;
+        padding: 30px;
+        border-radius: 12px;
+        background-color: rgba(216, 180, 255, 0.2); 
+        box-shadow: 0 8px 20px rgba(216, 180, 255, 0.3);
+        backdrop-filter: blur(5px);
+    }
+
+        .add-movie-form .form-title {
+            text-align: center;
+            color: #D8B4FF;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .add-movie-form .form-group label {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .add-movie-form .form-control {
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.2);
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 8px 10px;
+        }
+
+            .add-movie-form .form-control:focus {
+                border-color: #D8B4FF;
+                box-shadow: 0 0 5px rgba(216, 180, 255, 0.5);
+                background-color: rgba(255, 255, 255, 1);
+            }
+
+        .add-movie-form .form-title {
+            text-align: center;
+            color: #000; 
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(216,180,255,0.3); 
+        }
+
+            .add-movie-form .btn-primary:hover {
+                background-color: #C084FC;
+            }
+</style>

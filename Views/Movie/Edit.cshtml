@@ -1,0 +1,105 @@
+﻿@model MovieWeb.Models.Movie
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: white; 
+        color: #fff;
+    }
+
+    .edit-container {
+        background: linear-gradient(135deg, #d0e4f7, #a0c4f7); 
+        padding: 30px;
+        border-radius: 12px;
+        max-width: 800px;
+        width: 90%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        margin: 50px auto; 
+    }
+
+        .edit-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            margin-top: 12px;
+            color: #0d1b3d;
+        }
+
+    .form-title {
+        font-weight: bold;
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #0d1b3d;
+    }
+
+    .edit-container input,
+    .edit-container textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        border: 1px solid #0d3b66;
+        font-size: 14px;
+        box-sizing: border-box;
+        color: #000;
+    }
+
+        .edit-container input:focus,
+        .edit-container textarea:focus {
+            border-color: #08345c;
+            box-shadow: 0 0 8px #08345c;
+            outline: none;
+        }
+
+    .edit-container .btn-primary {
+        width: 100%;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 12px 0;
+        background-color: #0d3b66;
+        border: none;
+        color: #fff;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .edit-container .btn-primary:hover {
+            background-color: #08345c;
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="edit-container">
+    <h2 class="form-title">Edit Movie</h2>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+
+        <label asp-for="Duration"></label>
+        <input asp-for="Duration" />
+
+        <label asp-for="ReleaseDate"></label>
+        <input asp-for="ReleaseDate" type="date" />
+
+        <label asp-for="Amount"></label>
+        <input asp-for="Amount" />
+
+        <label asp-for="ImageUrl"></label>
+        <input asp-for="ImageUrl" />
+
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" rows="4"></textarea>
+
+        <label asp-for="Genre"></label>
+        <input asp-for="Genre" />
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>

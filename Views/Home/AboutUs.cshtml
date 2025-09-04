@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+    Layout = "_Layout";
+}
+
+
+
+<style>
+    body {
+        background-image: url('https://images.unsplash.com/photo-1601582581530-2f220a640d45?auto=format&fit=crop&w=1950&q=80'); /* филмска позадина */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        color: white;
+    }
+
+    .overlay {
+        background-color: rgba(0, 0, 0, 0.6); 
+        padding: 30px;
+        border-radius: 12px;
+    }
+
+    h1, h2, p, li {
+        color: #fff;
+    }
+
+    .map-container {
+        margin-top: 20px;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 400px;
+    }
+</style>
+
+<div class="container my-5" style="max-width: 900px;">
+    <div class="overlay">
+        <h1 class="text-center mb-4">About Us</h1>
+
+        <h2>Welcome to MovieXcape!</h2>
+        <p>
+            We are a passionate team of movie lovers dedicated to making your ticket booking experience easy and enjoyable. With our platform, you can quickly reserve tickets for your favorite movies and enjoy every moment at the cinema.
+        </p>
+
+        <h2>Our Mission</h2>
+        <p>
+            Our mission is to simplify the ticket booking process so you can focus on the movie experience. We believe everyone deserves to pick the best film and the perfect seat without any hassle or long lines.
+        </p>
+
+        <h2>What We Offer</h2>
+        <ul>
+            <li>A wide selection of the latest and most popular movies</li>
+            <li>Quick and easy seat reservation</li>
+            <li>Multiple payment options for your convenience</li>
+            <li>Secure handling of your personal information</li>
+        </ul>
+
+        <h2>Contact Us</h2>
+        <div class="p-3 bg-dark rounded mt-3">
+            <p><strong>Email:</strong> support@movieweb.com</p>
+            <p><strong>Phone:</strong> +1 (212) 555-1234</p>
+            <p><strong>Address:</strong> 123 Broadway, New York, NY 10006</p>
+        </div>
+
+        <div class="map-container mt-4">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.877963886298!2d-73.99351908459326!3d40.71277577933056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a2079d1163b%3A0x67ecb8c7b5b4d2!2s123%20Broadway%2C%20New%20York%2C%20NY%2010006!5e0!3m2!1sen!2sus!4v1692000000000!5m2!1sen!2sus"
+                    width="100%"
+                    height="100%"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        <p class="mt-4">Thank you for being a part of MovieXcape!</p>
+        <p><a href="/" class="btn btn-primary">Back to Home</a></p>
+    </div>
+</div>
