@@ -15,8 +15,4 @@
 - API Integration: REST API (MovieBookingApi)
 - Version Control: Git / GitHub
 
-## Setup
-1. Clone the repository:
-```bash
-git clone https://github.com/your-username/MovieBookingWeb.git
-cd MovieBookingWeb
+
